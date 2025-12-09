@@ -168,7 +168,7 @@ Alerts in action:
 ---
 
 # 7. File Structure
-
+``` text
 /pine-to-mql5-ema-slope-cross/
 │
 ├── src/
@@ -198,7 +198,7 @@ Alerts in action:
 │   ├── architecture_overview.md
 │
 └── README.md
-
+```
 ---
 
 
