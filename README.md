@@ -1,165 +1,184 @@
 # Pine → MQL5 Conversion  
-## EMA Slope + EMA Cross Strategy (ChartArt)
+## EMA Slope + EMA Cross Strategy (by ChartArt)
 
-A complete TradingView-to-MT5 conversion project with structural enhancements, modular architecture, improved visualization, and MT5 backtests.
+![MQL5](https://img.shields.io/badge/Language-MQL5-blue)
+![Pine Script](https://img.shields.io/badge/Pine--Script-v3-green)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Status](https://img.shields.io/badge/Project-Active-brightgreen)
 
-This repository reproduces the original TradingView strategy  
-**“EMA Slope + EMA Cross Strategy (by ChartArt)”**  
-and extends it with practical, production-level MQL5 engineering features.
+This project is a full **TradingView → MT5 conversion** of the public Pine Script strategy  
+**“EMA Slope + EMA Cross Strategy (by ChartArt)”**, rewritten **from scratch** in MQL5 with a modular, extensible architecture.
+
+It reproduces all logic from the original Pine Script and adds several real–world trading features not available in the TradingView version.
 
 ---
 
-# 🌟 Features at a Glance
-- Clean modular architecture  
-- Selectable trading timeframe  
-- Magic number for multi-symbol trading  
-- Optional non-“always in market” mode  
-- Alerts on entries/exits  
-- Visualization matching TradingView version  
-- Backtest & real-time screenshots included  
-- Risk & money management modules **planned** for v2.0  
+# 🔷 Quick Summary
+
+- Full conversion of TradingView strategy **Pine v3 → MQL5**  
+- Clean modular architecture (6 modules)  
+- Configurable timeframe, alerts, visualization  
+- Optional non–“always in market” mode  
+- Backtests + real-time charts included  
+- Roadmap for Risk/MM + Python analytics (v2.0)  
 
 ---
 
 # 1. Project Purpose
 
-This project demonstrates how a real TradingView strategy can be **accurately translated into MT5**, including:
+This repository demonstrates how a complex TradingView strategy can be **accurately translated** into a fully functional MetaTrader 5 Expert Advisor.
 
-- indicator logic  
-- entry conditions  
-- alert conditions  
-- visualization  
-- strategy flow  
-- market entry/exit behavior  
+Included components:
 
-In addition, several practical features were added to the MT5 version that are not present in the original Pine Script.
+- Indicator logic  
+- Entry/exit conditions  
+- Alert logic  
+- Visualization  
+- Strategy flow  
+- Real-world trading improvements  
 
 ---
 
 # 2. Original TradingView Strategy (Pine Script)
 
 **Source:**  
-https://www.tradingview.com/script/…  
+https://www.tradingview.com/script/…
 
+**Script:** *EMA Slope + EMA Cross Strategy*  
 **Author:** ChartArt  
-**Script name:** *EMA Slope + EMA Cross Strategy*  
 
-You can find the original Pine file in:  
-`/tradingview/original_script.pine`
+Original Pine Script file:  
+`tradingview/original_script.pine`
 
-### 📌 Core logic in Pine:
+### 📌 Core logic in Pine
+
 - EMA(2), EMA(4), EMA(20)  
 - Long/short conditions using slope + crossovers  
 - Always in the market  
-- Trend-colored EMAs  
-- `alertcondition()` signals  
+- Trend-based EMA colors  
+- `alertcondition()` notifications  
 
 ### 📸 TradingView Signals
+
 ![TradingView Signals](screenshot/TrView_chart_real_GBPUSD_1m.png)
 
 ---
 
 # 3. MT5 Conversion — Implemented Components
 
-### ✔ EMA calculations  
-Using MQL5 native `iMA()` or custom EMA module.
+### ✔ EMA Calculations  
+Using MQL5 `iMA()` or custom EMA module.
 
-### ✔ Slope detection  
-`Close[i] - Close[i+1]` and EMA differential.
+### ✔ Slope Detection  
+`Close[i] - Close[i+1]` and EMA differentials.
 
-### ✔ Cross detection  
-Pine’s `crossover` / `crossunder` mapped to MQL5 logic.
+### ✔ Cross Detection  
+Accurate translation of `crossover()` / `crossunder()`.
 
-### ✔ Position management  
-Full replication of `strategy.entry()` behavior.
+### ✔ Position Management  
+Full replication of Pine’s “reverse on signal” behaviour.
 
 ---
 
-# 4. MT5 Enhancements (beyond original Pine Script)
+# 4. MT5 Enhancements (Beyond Original Pine Script)
 
 ## 1️⃣ Selectable Timeframe  
-Works on any timeframe independent of chart TF  
-Values: `0` (chart), `16385` (H1), `16408` (D1)
+Operate independently from chart timeframe.  
+Examples:  
+- `0` → chart TF  
+- `16385` → H1  
+- `16408` → D1  
 
 ## 2️⃣ Signal-Based Trading  
-(Optionally disable “always in market”)  
-- Opens only when LONG/SHORT signals appear  
-- Reverses automatically on opposite signal  
+(Disable “always in market”)  
+- Opens only on valid LONG/SHORT signals  
+- Auto-reversal on opposite signal  
 
-## 3️⃣ Configurable Alerts  
-- MT5 `Alert()`  
-- Entry/exit alerts  
+## 3️⃣ Alerts  
+- MT5 `Alert()` notifications  
+- Entry/exit alert dispatching  
 - Optional push notifications  
 
-## 4️⃣ Enhanced Visualization  
-- EMA trend coloring (green/red/blue)  
-- Optional fill area between EMA2 and EMA3  
-- Bar coloring based on slope  
+## 4️⃣ Visualization  
+- EMA trend colors (green/red/blue)  
+- Fill zone between EMA2/EMA3 (optional)  
+- Bar coloring by slope  
 
 ## 5️⃣ Modular Architecture  
-Located under `/src/modules/`:
-- `ema_calc.mqh` — EMA calculations  
-- `slope_calc.mqh` — Slope & cross detection  
-- `DrawBar.mqh` — Bar coloring  
-- `DrawEMA.mqh` — EMA plotting  
-- `alerts.mqh` — Alert management  
-- `trade_executor.mqh` — Position execution logic  
+Located under `/src/modules`:
+
+- [`ema_calc.mqh`](src/modules/ema_calc.mqh)  
+- [`slope_calc.mqh`](src/modules/slope_calc.mqh)  
+- [`DrawBar.mqh`](src/modules/DrawBar.mqh)  
+- [`DrawEMA.mqh`](src/modules/DrawEMA.mqh)  
+- [`alerts.mqh`](src/modules/alerts.mqh)  
+- [`trade_executor.mqh`](src/modules/trade_executor.mqh)  
 
 ## 6️⃣ Market Closed Handling  
-Automatic retry when market is closed (`error 10018`).  
-Pending direction is tracked for delayed entries.
+- Auto-retry on `ERR_MARKET_CLOSED (10018)`  
+- Pending direction tracking for delayed entry  
 
 ---
 
-# 5. MT5 Strategy Logic
+# 5. Strategy Logic (MT5)
 
-The EA logic mirrors TradingView.
+The EA mirrors TradingView logic.
 
 ---
 
-## 🟩 Long Conditions  
-A) **Price crosses under EMA3**  
+## 🟩 Long Conditions
+
+**A)** Price crosses under EMA3  
 `crossunder(price, EMA3)`  
-**OR**  
-B) All of:
-- change(price) < 0  
-- change(EMA1) < 0  
-- crossunder(price, EMA1)  
-- change(EMA2) > 0  
 
-## 🟥 Short Conditions  
-A) **Price crosses above EMA3**  
+**OR**
+
+**B)** All of:  
+- `change(price) < 0`  
+- `change(EMA1) < 0`  
+- `crossunder(price, EMA1)`  
+- `change(EMA2) > 0`  
+
+---
+
+## 🟥 Short Conditions
+
+**A)** Price crosses above EMA3  
 `crossover(price, EMA3)`  
-**OR**  
-B) All of:
-- change(price) > 0  
-- change(EMA1) > 0  
-- crossover(price, EMA1)  
-- change(EMA2) < 0  
+
+**OR**
+
+**B)** All of:  
+- `change(price) > 0`  
+- `change(EMA1) > 0`  
+- `crossover(price, EMA1)`  
+- `change(EMA2) < 0`  
 
 ---
 
-## 📘 Position Management
+## 📘 Position Management Summary
 
-- Opens only when LONG or SHORT condition is met  
-- If the opposite signal appears → current position is closed and reversed  
+- Only 1 position is open at a time  
+- Opposite signal ⇒ immediate reversal  
+- Signals evaluated on every bar/tick  
 
 ---
 
-# 6. Backtest Results
+# 6. Backtest & Real-Time Results
 
-### 📈 Comparison of Pine vs MT5  
+### 📈 Pine vs MT5 — Comparison  
 ![Comparison](screenshot/comparison_of_results_Pine_MT5.png)
 
-### 🧪 MT5 Tester (Report)  
-![Tester](screenshot/tester's_work_MT5.png)  
-![Tester Results](screenshot/tester's_work_MT5_with_results.png)
+### 🧪 MT5 Tester Output  
+![Tester](screenshot/testers_work_MT5.png)  
+![Tester Results](screenshot/testers_work_MT5_with_results.png)
 
 ### 📡 Real-Time Examples  
-EURUSD M1  
+
+EURUSD M1:  
 ![EURUSD](screenshot/mt5_chart_real_EURUSD_1m.png)
 
-GBPUSD M1  
+GBPUSD M1:  
 ![GBPUSD](screenshot/mt5_chart_real_GBPUSD_1m.png)
 
 Alerts in action:  
@@ -168,7 +187,8 @@ Alerts in action:
 ---
 
 # 7. File Structure
-``` text
+
+```text
 /pine-to-mql5-ema-slope-cross/
 │
 ├── src/
@@ -179,7 +199,7 @@ Alerts in action:
 │       ├── alerts.mqh
 │       ├── DrawBar.mqh
 │       ├── DrawEMA.mqh
-│       ├── trade_executor.mqh
+│       └── trade_executor.mqh
 │
 ├── tradingview/
 │   └── original_script.pine
@@ -187,72 +207,82 @@ Alerts in action:
 ├── screenshot/
 │   ├── comparison_of_results_Pine_MT5.png
 │   ├── mt5_chart_real_with_alerts.png
-│   ├── tester's_work_MT5.png
-│   ├── tester's_work_MT5_with_results.png
+│   ├── testers_work_MT5.png
+│   ├── testers_work_MT5_with_results.png
 │   ├── mt5_chart_real_EURUSD_1m.png
 │   ├── mt5_chart_real_GBPUSD_1m.png
 │   └── TrView_chart_real_GBPUSD_1m.png
 │
 ├── docs/
 │   ├── logic_diagram.md
-│   ├── architecture_overview.md
+│   └── architecture_overview.md
 │
 └── README.md
 ```
 ---
 
-
 # 8. How to Use
 
-1. Copy the folder into:  
-   `MQL5/Experts/src/`
+1. **Copy** the EA folder to:  
+   `MQL5/Experts/pine_to_mql5_ema_slope_cross/`
 
-2. Compile the EA inside **MetaEditor**.
+2. **Compile** the EA inside **MetaEditor**.
 
-3. Attach the EA to a chart.
+3. **Attach** the EA to any chart (any symbol / any timeframe).
 
-4. Configure input parameters:
+4. **Configure input parameters:**
 
-   **EMA Settings**
-   - `MA1_Length` — Fast EMA (default: 2)  
-   - `MA2_Length` — Mid EMA (default: 4)  
-   - `MA3_Length` — Slow EMA (default: 20)  
+### ⚙️ EMA Settings  
+- `MA1_Length` — Fast EMA (default: 2)  
+- `MA2_Length` — Mid EMA (default: 4)  
+- `MA3_Length` — Slow EMA (default: 20)  
 
-   **Trading**
-   - `Timeframe` — 0 = chart TF, 16385 = H1, 16408 = D1  
-   - `MagicNumber` — trade ID for this EA (default: 123456)  
-   - `LotSize` — fixed lot size (default: 0.1)  
+### 🔧 Trading Parameters  
+- `Timeframe` — 0 = chart TF, 16385 = H1, 16408 = D1  
+- `MagicNumber` — identifier for trades  
+- `LotSize` — fixed lot size (default: 0.1)
 
-   **Visualization**
-   - `ShowBarColor` — color bars by EMA slopes  
-   - `ShowMovingAverages` — draw EMA lines  
-   - `ShowFillArea` — fill area between EMA2 and EMA3  
+### 🎨 Visualization  
+- `ShowBarColor` — color bars by EMA slope  
+- `ShowMovingAverages` — draw EMA lines  
+- `ShowFillArea` — fill between EMA2 and EMA3  
 
-   **Alerts**
-   - `SendAlerts` — enable/disable MT5 alerts on entries/exits  
+### 🔔 Alerts  
+- `SendAlerts` — enable/disable entry/exit alerts  
 
-5. Run backtest in Strategy Tester or use on a demo account for forward testing.
+5. **Run a backtest** in Strategy Tester or test live on a demo account.
 
 ---
 
 # 9. Roadmap — Planned for v2.0
 
-- Risk management module — customizable exit rules (TP/SL via EMA or volatility filters)  
-- Money management module — dynamic lot sizing based on risk percentage  
-- ATR-based stop loss integration  
-- Multi-symbol trading support  
-- Python module for automated reporting and trade analytics  
+Planned improvements for the next major release:
+
+### 📌 Risk & Money Management  
+- ATR-based stop loss  
+- Dynamic lot sizing (risk % model)  
+- Volatility-adjusted exit logic  
+
+### 📌 Multi-Symbol Trading  
+- Ability to manage multiple symbols from a single EA  
+- Shared or independent signal logic options  
+
+### 📌 Python Analytics Module  
+- Automated trade reporting  
+- Equity curve, drawdown, risk metrics  
+- Export to CSV/JSON/PDF  
+
+These features will evolve the EA into a complete professional trading framework.
 
 ---
 
 # 10. License & Attribution
 
-This project is for educational and demonstration purposes.  
-Original idea and Pine Script belong to **ChartArt (TradingView)**.  
-All MT5 code is written from scratch as a clean-room implementation.
+This project is intended for educational and demonstration purposes.
 
-This repository is distributed under the **MIT License**.  
-See the `LICENSE` file for details.
+- Original TradingView idea & Pine Script belong to **ChartArt**.  
+- All MQL5 code is a **clean-room implementation**, written independently from scratch.  
+- Licensed under the **MIT License** (see the `LICENSE` file).  
 
 ---
 
@@ -261,14 +291,14 @@ See the `LICENSE` file for details.
 **Maxime**  
 FinTech Developer · MT5 Automation · Trading Strategy Engineer  
 
-Specialized in:
+Specialized in:  
 - TradingView → MT5 conversions (Pine Script → MQL5)  
-- Expert Advisor development for MetaTrader 5  
-- Algorithmic strategy engineering  
-- Python analytics for trade reporting and automation  
+- Custom Expert Advisors for algorithmic trading  
+- Multi-timeframe signal architectures  
+- Python analytics & reporting tools  
 
-💬 **Need to convert your TradingView script to MT5 or build a custom EA?**  
-This project demonstrates the exact workflow and engineering quality I provide.  
-Feel free to contact me with your requirements.
+💬 **Need to convert a TradingView strategy to MT5?**  
+This repository demonstrates the exact engineering workflow and quality I deliver.  
+Feel free to contact me for custom development.
 
-
+---
